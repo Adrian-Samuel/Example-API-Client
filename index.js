@@ -1,149 +1,149 @@
  //@ts-check
-/**
- * Custom error class for invalid paths
- *
- * @extends Error
- */
-class InvalidPathError extends Error {
-  /**
-   * Creates a new instance of the InvalidPathError class
-   *
-   * @param {string} message - The error message
-   */
-  constructor(message) {
-    super(message);
-    this.name = 'InvalidPathError';
-  }
-}
+ /**
+  * Custom error class for invalid paths
+  *
+  * @extends Error
+  */
+ class InvalidPathError extends Error {
+   /**
+    * Creates a new instance of the InvalidPathError class
+    *
+    * @param {string} message - The error message
+    */
+   constructor(message) {
+     super(message);
+     this.name = 'InvalidPathError';
+   }
+ }
 
-/**
- * Custom error class for missing arguments
- *
- * @extends Error
- */
-class MissingArgumentsError extends Error {
-  /**
-   * Creates a new instance of the MissingArgumentsError class
-   *
-   * @param {string} message - The error message
-   */
-  constructor(message) {
-    super(message);
-    this.name = 'MissingArgumentsError';
-  }
-}
+ /**
+  * Custom error class for missing arguments
+  *
+  * @extends Error
+  */
+ class MissingArgumentsError extends Error {
+   /**
+    * Creates a new instance of the MissingArgumentsError class
+    *
+    * @param {string} message - The error message
+    */
+   constructor(message) {
+     super(message);
+     this.name = 'MissingArgumentsError';
+   }
+ }
 
-/**
- * Custom error class for failed requests
- *
- * @extends Error
- */
-class FailedRequestError extends Error {
-  /**
-   * Creates a new instance of the FailedRequestError class
-   *
-   * @param {string} message - The error message
-   */
-  constructor(message) {
-    super(message);
-    this.name = 'FailedRequestError';
-  }
-}
+ /**
+  * Custom error class for failed requests
+  *
+  * @extends Error
+  */
+ class FailedRequestError extends Error {
+   /**
+    * Creates a new instance of the FailedRequestError class
+    *
+    * @param {string} message - The error message
+    */
+   constructor(message) {
+     super(message);
+     this.name = 'FailedRequestError';
+   }
+ }
 
-/**
- * Custom error class for empty arguments
- *
- * @extends Error
- */
-class EmptyArgumentsError extends Error {
-  /**
-   * Creates a new instance of the EmptyArgumentsError class
-   *
-   * @param {string} message - The error message
-   */
-  constructor(message) {
-    super(message);
-    this.name = 'EmptyArgumentsError';
-  }
-}
+ /**
+  * Custom error class for empty arguments
+  *
+  * @extends Error
+  */
+ class EmptyArgumentsError extends Error {
+   /**
+    * Creates a new instance of the EmptyArgumentsError class
+    *
+    * @param {string} message - The error message
+    */
+   constructor(message) {
+     super(message);
+     this.name = 'EmptyArgumentsError';
+   }
+ }
 
 
 
-/**
- * Class for filtering and returning a list of methods
- */
-class QueryHelpers {
-  /**
-   * Creates a new instance of the QueryHelpers class
-   *
-   * @param {Array} methods - An array of methods
-   */
-  constructor(...methods) {
-    /**
-     * The array of methods
-     *
-     * @type {Array}
-     */
-    this.methods = methods;
-  }
+ /**
+  * Class for filtering and returning a list of methods
+  */
+ class QueryHelpers {
+   /**
+    * Creates a new instance of the QueryHelpers class
+    *
+    * @param {Array} methods - An array of methods
+    */
+   constructor(...methods) {
+     /**
+      * The array of methods
+      *
+      * @type {Array}
+      */
+     this.methods = methods;
+   }
 
-  /**
-   * Returns a new object with the methods assigned as properties
-   *
-   * @param {Array} methods - An array of methods
-   *
-   * @returns {Object} - An object with the methods assigned as properties
-   */
-  #returnMethods(...methods) {
-    return methods
-      .reduce((newObj, currentMethod) => Object.defineProperties(newObj, {
-        [currentMethod.name]: {
-          value: currentMethod
-        }
-      }), Object.defineProperties({}, {}));
-  }
+   /**
+    * Returns a new object with the methods assigned as properties
+    *
+    * @param {Array} methods - An array of methods
+    *
+    * @returns {Object} - An object with the methods assigned as properties
+    */
+   #returnMethods(...methods) {
+     return methods
+       .reduce((newObj, currentMethod) => Object.defineProperties(newObj, {
+         [currentMethod.name]: {
+           value: currentMethod
+         }
+       }), Object.defineProperties({}, {}));
+   }
 
-  /**
-   * Returns a new object with the specified methods assigned as properties
-   *
-   * @param {Array} pickedMethodsNames - An array of method names to pick
-   *
-   * @returns {Object} - An object with the specified methods assigned as properties
-   */
-  pick(...pickedMethodsNames) {
-    let methodList = [];
-    for (let pickedMethod of pickedMethodsNames) {
-      const [method] = this.methods.filter(method => method.name === pickedMethod);
-      methodList.push(method);
-    }
-    return this.#returnMethods(...methodList);
-  }
+   /**
+    * Returns a new object with the specified methods assigned as properties
+    *
+    * @param {Array} pickedMethodsNames - An array of method names to pick
+    *
+    * @returns {Object} - An object with the specified methods assigned as properties
+    */
+   pick(...pickedMethodsNames) {
+     let methodList = [];
+     for (let pickedMethod of pickedMethodsNames) {
+       const [method] = this.methods.filter(method => method.name === pickedMethod);
+       methodList.push(method);
+     }
+     return this.#returnMethods(...methodList);
+   }
 
-  /**
-   * Returns a new object with the methods that are not in the specified list assigned as properties
-   *
-   * @param {Array} omitedMethodsNames - An array of method names to omit
-   *
-   * @returns {Object} - An object with the methods that are not in the specified list assigned as properties
-   */
-  omit(...omitedMethodsNames) {
-    const remainingMethods = this.methods.reduce((methods, currentMethod) => {
-      let allowedMethod;
-      for (let omitedMethodName of omitedMethodsNames) {
-        if (currentMethod.name !== omitedMethodName) {
-          allowedMethod = currentMethod;
-        }
-      }
-      if (allowedMethod) {
-        return [...methods, allowedMethod];
-      } else {
-        return methods;
-      }
-    }, []);
+   /**
+    * Returns a new object with the methods that are not in the specified list assigned as properties
+    *
+    * @param {Array} omitedMethodsNames - An array of method names to omit
+    *
+    * @returns {Object} - An object with the methods that are not in the specified list assigned as properties
+    */
+   omit(...omitedMethodsNames) {
+     const remainingMethods = this.methods.reduce((methods, currentMethod) => {
+       let allowedMethod;
+       for (let omitedMethodName of omitedMethodsNames) {
+         if (currentMethod.name !== omitedMethodName) {
+           allowedMethod = currentMethod;
+         }
+       }
+       if (allowedMethod) {
+         return [...methods, allowedMethod];
+       } else {
+         return methods;
+       }
+     }, []);
 
-    return this.#returnMethods(...remainingMethods);
-  }
-}
+     return this.#returnMethods(...remainingMethods);
+   }
+ }
 
 
  class ApiQueryBuilder extends QueryHelpers {
@@ -169,10 +169,10 @@ class QueryHelpers {
      if (path.split('')[0] !== '/') {
        throw new InvalidPathError(`path ${path} is invalid, must begin with a '/'`)
      }
-     const formattedAuthorName= authorName.split(' ').length > 0 ? authorName.replace(' ', '%20'): authorName
-     
+     const formattedAuthorName = authorName.split(' ').length > 0 ? authorName.replace(' ', '%20') : authorName
+
      let url = new URL(path, 'http://api.book-seller-example.com')
-     
+
      url.searchParams.append('q', formattedAuthorName)
      url.searchParams.append('limit', limit)
      this.returnType = format;
@@ -244,6 +244,17 @@ class QueryHelpers {
 
        if (response.status !== 200) {
          return `Request to ${this.url} failed with response code: Err: ${response.status}`
+       }
+
+       if (this.returnType === 'xml') {
+         const xmlResponse = await response.text()
+         const parser = new DOMParser()
+         const xml = parser.parseFromString(xmlResponse, 'application/xml')
+         try {
+           return this.mapFunction(xml)
+         } catch (err) {
+           console.log(err)
+         }
        }
 
        const jsonResponse = await response.json()
